@@ -8,7 +8,6 @@ import (
 	"text/template"
 
 	"github.com/chzyer/readline"
-	"github.com/juju/ansiterm"
 	"github.com/manifoldco/promptui/list"
 	"github.com/manifoldco/promptui/screenbuf"
 )
@@ -580,17 +579,14 @@ func (s *Select) renderDetails(item interface{}) [][]byte {
 		return nil
 	}
 
-	var buf bytes.Buffer
-	w := ansiterm.NewTabWriter(&buf, 0, 0, 8, ' ', 0)
+	w := &bytes.Buffer{}
 
 	err := s.Templates.details.Execute(w, item)
 	if err != nil {
 		fmt.Fprintf(w, "%v", item)
 	}
 
-	w.Flush()
-
-	output := buf.Bytes()
+	output := w.Bytes()
 
 	return bytes.Split(output, []byte("\n"))
 }
